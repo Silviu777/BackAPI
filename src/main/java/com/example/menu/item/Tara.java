@@ -9,6 +9,7 @@ public class Tara {
     private final String localitate;
 
     public Tara(long id, String denumire, String regiune, String localitate) {
+        
         this.id = id;
         this.denumire = denumire;
         this.regiune = regiune;
