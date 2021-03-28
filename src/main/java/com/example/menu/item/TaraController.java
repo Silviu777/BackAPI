@@ -2,14 +2,17 @@ package com.example.menu.item;
 
 // Folosesc clasa ResponseEntity, deoarece asigura o descriere ampla a raspunsului si face accesibila introducerea de valori.
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import javax.validation.Valid;
 
+@CrossOrigin(origins = "https://dashboard.whatabyte.app")
 @RestController
 @RequestMapping("api/menu/items")
 public class TaraController {
@@ -43,12 +46,11 @@ public class TaraController {
                 .toUri();
 
         return ResponseEntity.created(location).body(tara1);
-        
     }
 
     // Metoda aditionala pentru crearea unei surse
     @PutMapping("/{id}")  // Endpoint care identifica o entitate dupa cheia primara
-    public ResponseEntity<Tara> updateId(@PathVariable("id") Long id, @RequestBody Tara updatedTara) {
+    public ResponseEntity<Tara> updateId(@PathVariable("id") Long id, @Valid @RequestBody Tara updatedTara) {
             Optional<Tara> updated = service.updateTara(id,updatedTara);
 
             return updated
@@ -69,6 +71,19 @@ public class TaraController {
         service.deleteTara(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @ExceptionHandler (MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException exc) {
+        List<ObjectError> errors = exc.getBindingResult().getAllErrors();
+        Map<String, String> map = new HashMap<>(errors.size());
+
+        errors.forEach((error) -> {
+            String catchErr = ((FieldError) error).getField();
+            String valoare = error.getDefaultMessage();
+            map.put(catchErr, valoare);
+        });
+        return ResponseEntity.badRequest().body(map);
     }
 
 }
