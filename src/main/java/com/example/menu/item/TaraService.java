@@ -20,7 +20,7 @@ public class TaraService {
     }
 
     private static List<Tara> defaultTara() {
-        return List.of (
+        return List.of(
                 new Tara(1, "Romania", "Brasov", "Poiana Brasov"),
                 new Tara(2, "Romania", "Brasov", "Bran"),
                 new Tara(3, "Romania", "Brasov", "Codlea"),
@@ -32,8 +32,7 @@ public class TaraService {
                 new Tara(9, "Romania", "Constanta", "Mamaia"),
                 new Tara(10,"Romania", "Buzau", "Nehoiu")
 
-                       );
-        
+        );
     }
 
     public List<Tara> findAll() {
@@ -47,16 +46,15 @@ public class TaraService {
     // Optional - incapsulare a unei valori optionale (obiect container care poate sau nu sa contina o valoare)
     public Optional<Tara> find(Long id) {
         return repository.findById(id);
-        
     }
 
     public Tara create(Tara tara) {
-        Tara aux = new Tara (
+        Tara aux = new Tara(
                    new Date().getTime(),
                    tara.getDenumire(),
                    tara.getRegiune(),
                    tara.getLocalitate()
-                            );
+               );
 
         return repository.save(aux);
     }
@@ -66,9 +64,7 @@ public class TaraService {
                 .map(prevTara -> {
                     Tara updated = prevTara.updateWith(newTara);
                     return repository.save(updated);
-                    
                 } );
-        
     }
 
     public void deleteTara(Long id) {
@@ -76,3 +72,4 @@ public class TaraService {
     }
 
 }
+
