@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 @EnableMapRepositories
+
 public class TaraService {
     private final CrudRepository<Tara, Long> repository;
 
@@ -72,4 +73,3 @@ public class TaraService {
     }
 
 }
-
