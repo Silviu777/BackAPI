@@ -12,10 +12,12 @@ import java.net.URI;
 import java.util.*;
 import javax.validation.Valid;
 
-@CrossOrigin(origins = "https://dashboard.whatabyte.app")
 @RestController
 @RequestMapping("api/menu/items")
+
 public class TaraController {
+    InMemoryTaraRepository repository;
+
     private final TaraService service;
 
     public TaraController(TaraService service) {
@@ -28,6 +30,7 @@ public class TaraController {
         List<Tara> items = new ArrayList<>();
         return ResponseEntity.ok().body(items);  // Shortcut pentru statusul "200 OK" la executia GET localhost:7000/api/menu/items (am folosit Postman pentru a testa endpoint-urile API-ului)
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Tara> find(@PathVariable("id") Long id) {
@@ -86,6 +89,51 @@ public class TaraController {
         return ResponseEntity.badRequest().body(map);
     }
 
+
+    @GetMapping("/create")
+    public String createTara() {
+        repository.save(new Tara(15, "Romania","Sibiu", "Paltinis"));
+        repository.saveAll(Arrays.asList(new Tara(16, "Romania", "Zalau", "Zalau"),
+                                         new Tara(17, "Romania", "Brasov", "Moeciu"),
+                                         new Tara(18, "Romania","Constanta","Mangalia")
+                                        ));
+        
+        return "Datele au fost inregistrate";
+    }
+
+    @PostMapping("/create")
+    public String singleTara(@RequestBody Tara tara) {
+        repository.save(new Tara(tara.getId(), tara.getDenumire(), tara.getRegiune(), tara.getLocalitate()));
+
+        return "Tara s-a creat";
+    }
+
+    @GetMapping("/findTot")
+    public List<Tara> findTot() {
+        List<Tara> tari = repository.findAll();
+        List<Tara> tariNoi = new ArrayList<>();
+
+        for(Tara tara : tari) {
+            tariNoi.add(new Tara(tara.getId(), tara.getDenumire(), tara.getRegiune(), tara.getLocalitate()));
+        }
+        return tariNoi;
+    }
+
+    @RequestMapping("/cauta/{id}")
+    public String cautaTari(@PathVariable long id) {
+        String tara;
+        tara = repository.findById(id).toString();
+        return tara;
+    }
+
+    @RequestMapping("/cautaDupaTara/{denumire}")
+    public List<Tara> cautaDupaNume(@PathVariable String denumire) {
+        List<Tara> tari = repository.findTaraByDenumire(denumire);
+        List<Tara> newTara = new ArrayList<>();
+
+        for(Tara tara : tari) {
+            newTara.add(new Tara(tara.getId(), tara.getDenumire(), tara.getRegiune(), tara.getLocalitate()));
+        }
+        return newTara;
+    }
 }
-
-
