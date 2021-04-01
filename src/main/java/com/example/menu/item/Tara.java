@@ -1,7 +1,9 @@
 package com.example.menu.item;
+
 import org.springframework.data.annotation.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+
 
 public class Tara {
 
@@ -49,8 +51,7 @@ public class Tara {
                 tara.denumire,
                 tara.regiune,
                 tara.localitate
-        );
+                       );
     }
-
 
 }
